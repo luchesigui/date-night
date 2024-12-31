@@ -107,17 +107,15 @@ export function useCardGame() {
   };
 
   useEffect(() => {
-    if (drawnType) {
-      pickNextCard();
-    }
-  }, [drawnType]);
-
-  useEffect(() => {
     if (
       (drawnType === DrawnType.CHALLANGE && pickedCards.length >= 1) ||
       pickedCards.length === questionCardsPerDateByType * typesOfQuestionCards
     ) {
-      resetGame();
+      router.push("/history");
+    }
+
+    if (drawnType) {
+      pickNextCard();
     }
   }, [pickedCards, drawnType]);
 
