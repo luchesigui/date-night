@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { cards } from "./data/cards";
@@ -15,6 +16,27 @@ const separateDeckInStacks = (cards: Card[]): CardStacks => {
 
 const getRandomNumberUpTo = (max: number) => Math.floor(Math.random() * max);
 
+const saveToLocalStorage = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
+const appendToLocalStorage = (key: string, cardId: number) => {
+  const existingLocalStorage = localStorage.getItem(key);
+  if (existingLocalStorage) {
+    const dateDetails = JSON.parse(existingLocalStorage);
+
+    saveToLocalStorage(key, {
+      ...dateDetails,
+      cards: [...dateDetails.cards, cardId],
+    });
+  } else {
+    saveToLocalStorage(key, {
+      date: new Date().toISOString(),
+      cards: [cardId],
+    });
+  }
+};
+
 const questionCardsPerDateByType = 1;
 const typesOfQuestionCards = 2;
 
@@ -27,6 +49,7 @@ export function useCardGame() {
   const [drawnType, setDrawnType] = useState<DrawnType>();
   const [showingDateType, setShowingDateType] = useState(false);
   const [stillHasCards, setStillHasCards] = useState(true);
+  const router = useRouter();
 
   const drawCardFrom = (cards: Card[]) => {
     const indexToDraw = getRandomNumberUpTo(cards.length);
@@ -49,6 +72,7 @@ export function useCardGame() {
   const resetGame = () => {
     setCardStacks(separateDeckInStacks(cards));
     setPickedCards([]);
+    saveToLocalStorage("pickedCards", []);
     setDrawnCard(undefined);
     setDrawnType(undefined);
     setStillHasCards(true);
@@ -56,6 +80,7 @@ export function useCardGame() {
 
   const acceptCard = (card: Card) => {
     removeCardFromStack(card);
+    appendToLocalStorage("pickedCards", card.id);
 
     if (drawnType === DrawnType.CHALLANGE) {
       setPickedCards([card]);
@@ -63,7 +88,6 @@ export function useCardGame() {
     }
 
     setPickedCards((pickedCards) => [...pickedCards, card]);
-    pickNextCard();
   };
 
   const skipCard = (card: Card) => {
