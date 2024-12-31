@@ -4,6 +4,7 @@ import { Header } from "@/app/components/header";
 
 import { DrawnTypeView } from "./components/dranw-type-view";
 import { DrawnCard } from "./components/drawn-card";
+import { NoCardsLeft } from "./components/no-cards-left";
 import { NoDateTypeSelected } from "./components/no-date-type-selected";
 import { useCardGame } from "./use-card-game";
 
@@ -13,9 +14,11 @@ export default function App() {
     drawnCard,
     drawnType,
     showingDateType,
+    stillHasCards,
     acceptCard,
-    pickNextCard,
+    skipCard,
     sortNewDate,
+    resetCards
   } = useCardGame();
 
   return (
@@ -31,12 +34,17 @@ export default function App() {
           {drawnType && showingDateType ? (
             <DrawnTypeView type={drawnType} />
           ) : drawnCard ? (
-            <DrawnCard
-              key={drawnCard.description}
-              card={drawnCard}
-              onAccept={() => acceptCard(drawnCard)}
-              onSkip={() => pickNextCard(pickedCards.length)}
-            />
+            <>
+              <DrawnCard
+                key={drawnCard.description}
+                card={drawnCard}
+                onAccept={() => acceptCard(drawnCard)}
+                onSkip={() => skipCard(drawnCard)}
+              />
+              {!stillHasCards && (
+                <NoCardsLeft resetCards={resetCards} />
+              )}
+            </>
           ) : (
             <NoDateTypeSelected sortNewDate={sortNewDate} />
           )}
@@ -45,3 +53,4 @@ export default function App() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { cards } from "./data/cards";
 import { Card, DateType, DrawnType, GroupedCards } from "./page.types";
@@ -21,6 +21,7 @@ export function useCardGame() {
   );
   const [drawnType, setDrawnType] = useState<DrawnType>();
   const [showingDateType, setShowingDateType] = useState(false);
+  const [stillHasCards, setStillHasCards] = useState(true);
 
   const getRandomIndexFrom = (max: number) => Math.floor(Math.random() * max);
 
@@ -29,11 +30,11 @@ export function useCardGame() {
     return cards[indexToDraw];
   };
 
-  const removeCardFromGroup = (type: DateType, card: Card) => {
-    const newGroup = cardGroup[type].filter(
+  const removeCardFromGroup = (card: Card) => {
+    const newGroup = cardGroup[card.type].filter(
       (groupCard) => groupCard.description !== card.description
     );
-    setCardGroup({ ...cardGroup, [type]: newGroup });
+    setCardGroup({ ...cardGroup, [card.type]: newGroup });
   };
 
   const resetCards = () => {
@@ -45,7 +46,7 @@ export function useCardGame() {
 
   const acceptCard = (card: Card) => {
     if (drawnType === DrawnType.CHALLANGE) {
-      resetCards();
+      removeCardFromGroup(card);
       return;
     }
 
@@ -54,18 +55,23 @@ export function useCardGame() {
     pickNextCard(newPickedCards.length);
   };
 
+  const skipCard = (card: Card) => {
+    removeCardFromGroup(card);
+    pickNextCard(pickedCards.length);
+  }
+
   const pickNextCard = (totalPickedCards: number) => {
-    if (drawnType === DrawnType.CHALLANGE || totalPickedCards >= 4) {
+    const isChallange = drawnType === DrawnType.CHALLANGE
+    if (isChallange && totalPickedCards === 1 || totalPickedCards >= 4) {
       resetCards();
       return;
     }
 
     const card = drawCardFrom(
-      cardGroup[totalPickedCards >= 2 ? DateType.OTHER : DateType.YOU]
+      cardGroup[isChallange ? DateType.BOTH : totalPickedCards >= 2 ? DateType.OTHER : DateType.YOU]
     );
 
     if (card) {
-      removeCardFromGroup(card.type, card);
       setDrawnCard(card);
     }
   };
@@ -80,7 +86,6 @@ export function useCardGame() {
 
     const drawnCard = drawCardFrom(cardsToDraw);
     if (drawnCard) {
-      removeCardFromGroup(drawnCard.type, drawnCard);
       delayedSetDrawnCard(drawnCard);
     }
 
@@ -95,13 +100,29 @@ export function useCardGame() {
     }, 1000);
   };
 
+  useEffect(() => {
+    if(drawnType === DrawnType.CHALLANGE) {
+      setStillHasCards(cardGroup[DateType.BOTH].length > 0)  
+      return
+    }
+
+    if(pickedCards.length < 2) {
+      setStillHasCards(cardGroup[DateType.YOU].length > 0)  
+      return
+    }
+
+    setStillHasCards(cardGroup[DateType.OTHER].length > 0)  
+  }, [cardGroup, pickedCards, drawnType]);
+
   return {
+    stillHasCards,
     pickedCards,
     drawnCard,
     drawnType,
     showingDateType,
     acceptCard,
-    pickNextCard,
+    skipCard,
     sortNewDate,
+    resetCards
   };
 }
