@@ -1,32 +1,39 @@
-import { Card, DateType } from "../page.types";
+import { Card, CardType } from "../page.types";
 
 export const cards: Card[] = [
   {
-    type: DateType.YOU,
+    id: 1,
+    type: CardType.YOU,
     description: "Pergunta sobre você 1",
   },
   {
-    type: DateType.YOU,
+    id: 2,
+    type: CardType.YOU,
     description: "Pergunta sobre você 2",
   },
   {
-    type: DateType.YOU,
+    id: 3,
+    type: CardType.YOU,
     description: "Pergunta sobre você 3",
   },
   {
-    type: DateType.OTHER,
+    id: 4,
+    type: CardType.OTHER,
     description: "Pergunta sobre o outro 1",
   },
   {
-    type: DateType.OTHER,
+    id: 5,
+    type: CardType.OTHER,
     description: "Pergunta sobre o outro 2",
   },
   {
-    type: DateType.OTHER,
+    id: 6,
+    type: CardType.OTHER,
     description: "Pergunta sobre o outro 3",
   },
   {
-    type: DateType.BOTH,
+    id: 7,
+    type: CardType.BOTH,
     description: "Vocês vão fazer alguma coisa",
   },
 ];

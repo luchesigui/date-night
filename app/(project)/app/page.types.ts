@@ -1,4 +1,4 @@
-export enum DateType {
+export enum CardType {
   YOU = "you",
   OTHER = "other",
   BOTH = "both",
@@ -10,8 +10,9 @@ export enum DrawnType {
 }
 
 export type Card = {
-  type: DateType;
+  id: number;
+  type: CardType;
   description: string;
 };
 
-export type GroupedCards = Record<DateType, Card[]>;
+export type CardStacks = Record<CardType, Card[]>;

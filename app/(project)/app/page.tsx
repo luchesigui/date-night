@@ -18,7 +18,7 @@ export default function App() {
     acceptCard,
     skipCard,
     sortNewDate,
-    resetCards
+    resetGame,
   } = useCardGame();
 
   return (
@@ -41,9 +41,7 @@ export default function App() {
                 onAccept={() => acceptCard(drawnCard)}
                 onSkip={() => skipCard(drawnCard)}
               />
-              {!stillHasCards && (
-                <NoCardsLeft resetCards={resetCards} />
-              )}
+              {!stillHasCards && <NoCardsLeft resetCards={resetGame} />}
             </>
           ) : (
             <NoDateTypeSelected sortNewDate={sortNewDate} />
@@ -53,4 +51,3 @@ export default function App() {
     </div>
   );
 }
-
