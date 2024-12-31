@@ -1,27 +1,18 @@
 "use client";
 
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
 
 import { Header } from "@/app/components/header";
-import { Button } from "@/app/components/ui/button";
 
-enum DateType {
-  YOU = "you",
-  OTHER = "other",
-  BOTH = "both",
-}
-
-type Card = {
-  type: DateType;
-  description: string;
-};
-
-enum DrawnType {
-  CHALLANGE = "challange",
-  QUESTIONS = "questions",
-}
-
-type GroupedCards = Record<DateType, Card[]>;
+import { DrawnTypeView } from "./components/dranw-type-view";
+import { DrawnCard } from "./components/drawn-card";
+import { NoDateTypeSelected } from "./components/no-date-type-selected";
+import {
+  type Card,
+  DateType,
+  DrawnType,
+  type GroupedCards,
+} from "./page.types";
 
 const cards: Card[] = [
   {
@@ -171,86 +162,10 @@ export default function App() {
               onSkip={() => pickNextCard(pickedCards.length)}
             />
           ) : (
-            <div>
-              <h1 className="text-2xl font-bold mb-3">Sorteio de dates</h1>
-              <Button onClick={sortNewDate}>Sortear</Button>
-            </div>
+            <NoDateTypeSelected sortNewDate={sortNewDate} />
           )}
         </div>
       </div>
     </div>
   );
 }
-
-const DrawnTypeView = ({ type }: { type: DrawnType }) => {
-  const getDrawnTypeText = () => {
-    if (type === DrawnType.CHALLANGE) {
-      return "Desafio!";
-    }
-
-    return "Sorteio de perguntas";
-  };
-
-  return (
-    <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center bg-black/50 text-white">
-      <h2 className="text-6xl">{getDrawnTypeText()}</h2>
-    </div>
-  );
-};
-
-const DrawnCard = ({
-  card,
-  onSkip,
-  onAccept,
-}: {
-  card: Card;
-  onSkip: () => void;
-  onAccept: () => void;
-}) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <Card>{card.description}</Card>
-      <div className="flex gap-2 items-center justify-center">
-        <Button title="Pular essa carta" onClick={onSkip}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </Button>
-        <Button title="Aceitar essa carta" onClick={onAccept}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-const Card = ({ children }: PropsWithChildren) => {
-  return (
-    <div className="rounded-lg p-10 bg-base-200 w-[300px] h-[420px] flex flex-col items-center justify-center bg-[#eb3b5a] outline outline-white outline-[1px] outline-offset-[-20px] text-white text-center">
-      {children}
-    </div>
-  );
-};
