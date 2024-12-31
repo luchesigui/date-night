@@ -6,9 +6,12 @@ import { Header } from "@/app/components/header";
 import { useState } from "react";
 import { Card } from "../app/components/card";
 
-const history = [
+const lastestDate = JSON.parse(localStorage.getItem("pickedCards") ?? "{}");
+
+const history: Array<{ date: string; cards: number[] }> = [
+  lastestDate,
   {
-    date: "2024-01-30",
+    date: "2024-01-31",
     cards: [1, 4],
   },
   {
@@ -76,7 +79,7 @@ export default function History() {
 
         <div className="flex flex-col gap-4 mb-6">
           <h2>
-            {getDateFromString(latestDate.date).toLocaleDateString("pt-BR")}
+            {new Intl.DateTimeFormat("pt-BR").format(new Date(latestDate.date))}
           </h2>
           <ul className="flex gap-4">
             {latestDate.cards.map((cardId, index) => (

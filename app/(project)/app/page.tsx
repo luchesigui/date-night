@@ -2,6 +2,7 @@
 
 import { Header } from "@/app/components/header";
 
+import { useEffect } from "react";
 import { DrawnTypeView } from "./components/dranw-type-view";
 import { DrawnCard } from "./components/drawn-card";
 import { NoCardsLeft } from "./components/no-cards-left";
@@ -20,6 +21,10 @@ export default function App() {
     sortNewDate,
     resetGame,
   } = useCardGame();
+
+  useEffect(() => {
+    localStorage.removeItem("pickedCards");
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto h-screen flex flex-col">
