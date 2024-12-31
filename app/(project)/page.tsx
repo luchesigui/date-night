@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { AlertIcon, CheckIcon } from "../components/icons";
 import { Header } from "../components/header";
+import { AlertIcon, CheckIcon } from "../components/icons";
 
 export default function Home() {
   return (
@@ -25,6 +25,9 @@ export default function Home() {
             <Card href="enviar-email" loginRequired>
               Envio de emails
             </Card>
+          </div>
+          <div className="flex gap-10">
+            <Card href="/app">Date night</Card>
           </div>
           <Configs />
         </div>
